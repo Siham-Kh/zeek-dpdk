@@ -1,0 +1,2 @@
+# This is the command used to configure this build
+./configure --zeek-dist=/home/snk14/zeek-3.2.3

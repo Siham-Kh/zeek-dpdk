@@ -1,0 +1,79 @@
+Performing C++ SOURCE FILE Test cxx17_already_works failed with the following output:
+Change Dir: /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_e1b34/fast"
+/usr/bin/make -f CMakeFiles/cmTC_e1b34.dir/build.make CMakeFiles/cmTC_e1b34.dir/build
+make[1]: Entering directory '/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_e1b34.dir/src.cxx.o
+/usr/bin/c++    -Dcxx17_already_works   -o CMakeFiles/cmTC_e1b34.dir/src.cxx.o -c /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp/src.cxx
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp/src.cxx: In function ‘int main()’:
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp/src.cxx:2:24: error: ‘optional’ is not a member of ‘std’
+      int main() { std::optional<int> a; }
+                        ^~~~~~~~
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp/src.cxx:2:33: error: expected primary-expression before ‘int’
+      int main() { std::optional<int> a; }
+                                 ^~~
+CMakeFiles/cmTC_e1b34.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_e1b34.dir/src.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_e1b34.dir/src.cxx.o] Error 1
+make[1]: Leaving directory '/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_e1b34/fast' failed
+make: *** [cmTC_e1b34/fast] Error 2
+
+Source file was:
+#include <optional>
+     int main() { std::optional<int> a; }
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_052dd/fast"
+/usr/bin/make -f CMakeFiles/cmTC_052dd.dir/build.make CMakeFiles/cmTC_052dd.dir/build
+make[1]: Entering directory '/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_052dd.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -Wall -Wno-unused    -Wall -Wno-unused    -o CMakeFiles/cmTC_052dd.dir/CheckSymbolExists.c.o   -c /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_052dd
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_052dd.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wno-unused    -Wall -Wno-unused     -rdynamic CMakeFiles/cmTC_052dd.dir/CheckSymbolExists.c.o  -o cmTC_052dd 
+CMakeFiles/cmTC_052dd.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x1b): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_052dd.dir/build.make:97: recipe for target 'cmTC_052dd' failed
+make[1]: *** [cmTC_052dd] Error 1
+make[1]: Leaving directory '/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_052dd/fast' failed
+make: *** [cmTC_052dd/fast] Error 2
+
+File /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_aaaf5/fast"
+/usr/bin/make -f CMakeFiles/cmTC_aaaf5.dir/build.make CMakeFiles/cmTC_aaaf5.dir/build
+make[1]: Entering directory '/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_aaaf5.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -Wall -Wno-unused    -Wall -Wno-unused -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_aaaf5.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.10/Modules/CheckFunctionExists.c
+Linking C executable cmTC_aaaf5
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_aaaf5.dir/link.txt --verbose=1
+/usr/bin/cc  -Wall -Wno-unused    -Wall -Wno-unused -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_aaaf5.dir/CheckFunctionExists.c.o  -o cmTC_aaaf5 -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_aaaf5.dir/build.make:97: recipe for target 'cmTC_aaaf5' failed
+make[1]: *** [cmTC_aaaf5] Error 1
+make[1]: Leaving directory '/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_aaaf5/fast' failed
+make: *** [cmTC_aaaf5/fast] Error 2
+
+

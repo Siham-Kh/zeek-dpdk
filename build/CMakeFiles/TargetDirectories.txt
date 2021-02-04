@@ -1,0 +1,13 @@
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/install/strip.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/install/local.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/list_install_components.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/rebuild_cache.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/edit_cache.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/Zeek-Dpdk.linux-x86_64.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/generate_outputs.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/install.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/copy-scripts-Zeek_Dpdk.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/dist.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/package_source.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/bro-plugin-Zeek_Dpdk.dir
+/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles/package.dir

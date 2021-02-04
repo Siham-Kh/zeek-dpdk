@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+
+plugin_usage() {
+    cat <<EOF
+    --with-dpdk=DIR          Path to dpdk installation
+EOF
+}
+
+plugin_option() {
+
+    case "$1" in
+        --with-dpdk=*)
+            append_cache_entry dpdk_ROOT_DIR PATH $optarg
+            return 0
+            ;;
+
+        *)
+            return 1;
+            ;;
+    esac
+}

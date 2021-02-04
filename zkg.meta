@@ -1,0 +1,7 @@
+[package]
+description = Packet source plugin that provides native dpdk support.
+tags = packet source, plugin, dpdk
+plugin_dir = build
+script_dir = scripts
+build_command = ( ./configure --zeek-dist=%(zeek_dist)s && make )
+test_command = ( cd tests && btest -d )
