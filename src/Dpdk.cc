@@ -54,6 +54,7 @@ bool DpdkSource::SetFilter(int index){
 void DpdkSource::Statistics(Stats* s){
 }
 
+/*
 static int
 lcore_hello(__rte_unused void *arg){
     unsigned lcore_id;
@@ -67,6 +68,7 @@ static int lcore_main(){
     lcore_hello(NULL);
     return 0;
 }
+*/
 
 // Initializes a given port using global settings and with the RX buffers coming from the mbuf_pool passed as a parameter.
 static inline int
@@ -177,7 +179,7 @@ void DpdkSource::Open(){
 
     /* call lcore_hello() on the main lcore */
 
-    lcore_main();
+    // lcore_main();
 }
 
 void DpdkSource::Close(){
