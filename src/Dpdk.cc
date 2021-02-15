@@ -14,12 +14,12 @@ DpdkSource::~DpdkSource(){
 
 DpdkSource::DpdkSource(const std::string& path, bool is_live){
 
-	if ( ! is_live )
-		Error("Dpdk source does not support offline input");
+    if ( ! is_live )
+    	Error("Dpdk source does not support offline input");
 
-	current_filter = -1;
-	props.path = path;
-	props.is_live = is_live;
+    current_filter = -1;
+    props.path = path;
+    props.is_live = is_live;
     goOverBurst = 0;
 
 }
