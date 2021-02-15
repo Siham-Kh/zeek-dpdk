@@ -21,7 +21,8 @@ Build the plugin:
     ./configure --zeek-dist=/path/to/zeek/director
     make
     sudo make install
-    Export the ZEEK_PLUGIN_PATH to take in consideration the plugin location: export ZEEK_PLUGIN_PATH=/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build
+    Export the ZEEK_PLUGIN_PATH to take in consideration the plugin location: 
+        export ZEEK_PLUGIN_PATH=~/path/plugin/zeek-dpdk/build
 
 
 
