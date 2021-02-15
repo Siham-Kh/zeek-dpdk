@@ -6,7 +6,7 @@ This plugin provides native DPDK support for Zeek as a packet source.
 
 
 
-Installation
+1. Installation
 ------------
 
 Follow DPDK (20.11)'s instructions to configure, build and install DPDK:
@@ -24,7 +24,8 @@ Build the plugin:
     Export the ZEEK_PLUGIN_PATH to take in consideration the plugin location: export ZEEK_PLUGIN_PATH=/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build
 
 
-Usage
+
+2. Usage
 ------------
 
 For pysical devices: 
@@ -43,7 +44,8 @@ The zeek-dpdk plugin can be used to monitor the device by using the following cm
 
 
 
-Limitations:
+
+3. Limitations:
 ------------
 
 - So far all dpdk options are hardcoded --> either read from a file or something else
