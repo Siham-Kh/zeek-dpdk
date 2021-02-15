@@ -13,8 +13,6 @@ zeek-config.h
 /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/src/zeek-config.h
 Dpdk.h
 /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/src/Dpdk.h
-iosource/Packet.h
--
 iostream
 -
 
@@ -34,6 +32,8 @@ rte_cycles.h
 rte_lcore.h
 -
 rte_mbuf.h
+-
+iosource/Packet.h
 -
 
 /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/src/Plugin.cc

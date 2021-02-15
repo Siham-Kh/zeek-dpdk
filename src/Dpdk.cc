@@ -1,8 +1,7 @@
 #include <assert.h>
 #include "zeek-config.h"
 #include "Dpdk.h"
-#include <iosource/Packet.h>
-#include<iostream>
+#include <iostream>
 
 
 using namespace std;
@@ -21,6 +20,7 @@ DpdkSource::DpdkSource(const std::string& path, bool is_live){
 	current_filter = -1;
 	props.path = path;
 	props.is_live = is_live;
+    goOverBurst = 0;
 
 }
 
@@ -38,6 +38,8 @@ bool DpdkSource::ExtractNextPacket(Packet* pkt){
 }
 
 void DpdkSource::DoneWithPacket(){
+    // after finishing the last bit of the burst
+    goOverBurst = 0;
 }
 
 bool DpdkSource::PrecompileFilter(int index, const std::string& filter){
@@ -184,3 +186,32 @@ void DpdkSource::Close(){
 }
 
 
+int  DpdkSource::ExtractNextBurst(Packet pbufs[MAX_PKT_BURST]){
+
+    /* Get burst of RX packets, from first port of pair. */
+    const uint16_t n_pkts = rte_eth_rx_burst(0, 0, bufs, MAX_PKT_BURST);  // hard coded the port
+    goOverBurst = n_pkts;
+
+	for(int i=0;i<n_pkts;i++){
+		BuffertToPacket(bufs[i], &pbufs[i]);
+    }
+    
+	return n_pkts;
+}
+
+
+void  DpdkSource::BuffertToPacket(struct rte_mbuf* buf, Packet* pkt){
+	if(buf == NULL || pkt == NULL)
+		return;
+
+	pkt_timeval ts = {0, 0};
+	u_char* data = rte_pktmbuf_mtod(buf, u_char*);
+	std::string tag = "";
+    
+
+	pkt->Init(1, &ts, rte_pktmbuf_data_len(buf), rte_pktmbuf_pkt_len(buf), data, false, tag); //  copy = true: the constructor will make an internal copy of data, so that the caller can release its version.
+}
+
+/*
+
+*/

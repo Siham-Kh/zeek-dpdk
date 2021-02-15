@@ -9,14 +9,13 @@
 #include <rte_cycles.h>
 #include <rte_lcore.h>
 #include <rte_mbuf.h>
+#include <iosource/Packet.h>
+
 #define RX_RING_SIZE 1024
 #define TX_RING_SIZE 1024
 #define NUM_MBUFS 8191
 #define MBUF_CACHE_SIZE 250
 #define BURST_SIZE 32
-
-
-
 #define RX_QUEUES 1
 #define TX_QUEUES 0
 #define RX_DESC 0
@@ -28,7 +27,7 @@
 #define RSS_MASK 0 
 #define MBUF_ELEMENTS 8192 // optimal -> MBUF_ELEMENTS mod MBUF_SIZE = 0
 #define MBUF_SIZE 2 // on KB
-#define MAX_PKT_BURST 10
+#define MAX_PKT_BURST 10   // normally it's 64
 
 namespace iosource {
 namespace pktsrc {
@@ -45,12 +44,11 @@ protected:
 	// PktSrc interface.
 	void Open() override;
 	void Close() override;
+	bool ExtractNextPacket(Packet* pkt);
+	int ExtractNextBurst(Packet bufs[MAX_PKT_BURST]);
+	// int GetLastBurstSize() override;
 
 	
-	// int ExtractNextBurst(Packet bufs[MAX_PKT_BURST]) override;
-	// int GetLastBurstSize() override;
-	
-	bool ExtractNextPacket(Packet* pkt) override;
 	void DoneWithPacket() override;
 	bool PrecompileFilter(int index, const std::string& filter) override;
 	bool SetFilter(int index) override;
@@ -61,9 +59,14 @@ private:
 	static inline int port_init(uint16_t port, struct rte_mempool *mbuf_pool);
 	static int lcore_hello(__rte_unused void *arg);
 	static int lcore_hello();
+	void BuffertToPacket(struct rte_mbuf* buf, Packet* pkt);
 
 	Properties props;
 	int current_filter;
+
+	struct rte_mbuf *bufs[MAX_PKT_BURST];
+
+	int goOverBurst;
 
 };
 
