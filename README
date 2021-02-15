@@ -30,7 +30,7 @@ Build the plugin:
 ------------
 
 For pysical devices: 
-    - Unbind the device to be by DPDK from the kernel
+    - Unbind the device to be used by DPDK from the kernel
 
 For Virtual devices:
     - No need, via --vdev in the configure file or by hardcoding it in the plugin

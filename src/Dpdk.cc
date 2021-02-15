@@ -211,4 +211,12 @@ void  DpdkSource::BuffertToPacket(struct rte_mbuf* buf, Packet* pkt){
     
 
 	pkt->Init(1, &ts, rte_pktmbuf_data_len(buf), rte_pktmbuf_pkt_len(buf), data, false, tag); //  copy = true: the constructor will make an internal copy of data, so that the caller can release its version.
+<<<<<<< HEAD
 }
+=======
+}
+
+/*
+
+*/
+>>>>>>> 434227759c04676d971c4fa71254600d7de44f69
