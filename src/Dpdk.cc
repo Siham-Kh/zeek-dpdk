@@ -64,7 +64,7 @@ lcore_hello(__rte_unused void *arg){
 }
 
 static int lcore_main(){
-    /* call lcore_hello() on the main lcore */
+    // call lcore_hello() on the main lcore
     lcore_hello(NULL);
     return 0;
 }
