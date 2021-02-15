@@ -3,6 +3,18 @@
 
 #include <iosource/PktSrc.h>
 #include <rte_ethdev.h>
+#include <stdint.h>
+#include <inttypes.h>
+#include <rte_eal.h>
+#include <rte_cycles.h>
+#include <rte_lcore.h>
+#include <rte_mbuf.h>
+#define RX_RING_SIZE 1024
+#define TX_RING_SIZE 1024
+#define NUM_MBUFS 8191
+#define MBUF_CACHE_SIZE 250
+#define BURST_SIZE 32
+
 
 
 #define RX_QUEUES 1
@@ -24,7 +36,7 @@ namespace pktsrc {
 class DpdkSource : public iosource::PktSrc{
 
 public:
-	DpdkSource(const std::string& path, bool is_live);
+	DpdkSource(const std::string& path, bool is_live, const std::string& arg_kind);
 	~DpdkSource() override;
 
 	static PktSrc* Instantiate(const std::string& path, bool is_live);
@@ -43,17 +55,15 @@ protected:
 
 
 private:
-	// bool Configure();
-	// void ConvertToPacket(struct rte_mbuf* buf, Packet* pkt);
+
+	static inline int port_init(uint16_t port, struct rte_mempool *mbuf_pool);
+	static int lcore_hello(__rte_unused void *arg);
+	static int lcore_hello();
 
 	Properties props;
-	Stats stats;
-	int port;
-	int last_burst_size;
+	std::string kind;
+	int current_filter;
 
-	rte_eth_stats dpdk_stats;
-
-	struct rte_mbuf *last_burst[MAX_PKT_BURST];
 };
 
 }

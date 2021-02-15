@@ -15,11 +15,25 @@ Dpdk.h
 /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/src/Dpdk.h
 iosource/Packet.h
 -
+iostream
+-
 
 /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/src/Dpdk.h
 iosource/PktSrc.h
 -
 rte_ethdev.h
+-
+stdint.h
+-
+inttypes.h
+-
+rte_eal.h
+-
+rte_cycles.h
+-
+rte_lcore.h
+-
+rte_mbuf.h
 -
 
 /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/src/Plugin.cc
