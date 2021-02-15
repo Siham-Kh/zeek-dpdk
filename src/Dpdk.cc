@@ -1,27 +1,22 @@
 #include <assert.h>
-
 #include "zeek-config.h"
-// #include "device.h"
-
 #include "Dpdk.h"
 #include <iosource/Packet.h>
-// #include <rte_per_lcore.h>
-// #include <rte_lcore.h>
 #include<iostream>
+
+
 using namespace std;
-
 using namespace iosource::pktsrc;
-
 
 
 DpdkSource::~DpdkSource(){
 	Close();
 }
 
-DpdkSource::DpdkSource(const std::string& path, bool is_live, const std::string& arg_kind){
+DpdkSource::DpdkSource(const std::string& path, bool is_live){
 
 	if ( ! is_live )
-		Error("pf_ring source does not support offline input");
+		Error("Dpdk source does not support offline input");
 
 	current_filter = -1;
 	props.path = path;
@@ -29,9 +24,36 @@ DpdkSource::DpdkSource(const std::string& path, bool is_live, const std::string&
 
 }
 
+
+iosource::PktSrc* DpdkSource::Instantiate(const std::string& path, bool is_live){
+    return new DpdkSource(path, is_live);
+}
+
+
+bool DpdkSource::ExtractNextPacket(Packet* pkt){
+	/* You should never call this function, call burst instead */
+	/* It is possible to change the implementation to return one packet */
+	/* after calling this function, but dpdk should use bursts */
+	return false;
+}
+
+void DpdkSource::DoneWithPacket(){
+}
+
+bool DpdkSource::PrecompileFilter(int index, const std::string& filter){
+	return PktSrc::PrecompileBPFFilter(index, filter);
+}
+
+bool DpdkSource::SetFilter(int index){
+	/* Uh, DPDK has this option? */
+	return true;
+}
+
+void DpdkSource::Statistics(Stats* s){
+}
+
 static int
-lcore_hello(__rte_unused void *arg)
-{
+lcore_hello(__rte_unused void *arg){
     unsigned lcore_id;
     lcore_id = rte_lcore_id();
     printf("hello from core %u\n", lcore_id);
@@ -44,63 +66,7 @@ static int lcore_main(){
     return 0;
 }
 
-
-iosource::PktSrc* DpdkSource::Instantiate(const std::string& path, bool is_live){
-	char *my_argv[] = {
-     "myprogram", // most programs will ignore this
-     "-l 1",
-     "-n 2",
-     "-w 0000:00:19.0",
-     NULL
-	};
-
-    int ret;
-    unsigned lcore_id;
-
-    /* Initialize the Environment Abstraction Layer (EAL). */
-    ret = rte_eal_init(3, my_argv);
-    if (ret < 0)
-        rte_panic("Cannot init EAL\n");
-    
-    std::cout << "path : " << path;     // test is device id
-
-    /* Creates a new mempool in memory to hold the mbufs. */
-    struct rte_mempool *mbuf_pool;
-    mbuf_pool = rte_pktmbuf_pool_create("MBUF_POOL", NUM_MBUFS,
-        MBUF_CACHE_SIZE, 0, RTE_MBUF_DEFAULT_BUF_SIZE, rte_socket_id());
-    if (mbuf_pool == NULL)
-        rte_exit(EXIT_FAILURE, "Cannot create mbuf pool\n");
-
-    /* Initialize the single port available */
-    uint16_t portid = 0;
-    if (port_init(portid, mbuf_pool) != 0)
-        rte_exit(EXIT_FAILURE, "Cannot init port %"PRIu16 "\n", portid);
-
-
-    if (rte_lcore_count() > 1)
-        printf("\nWARNING: Too many lcores enabled. Only 1 used.\n");
-    
-
-    /* call lcore_hello() on the main lcore */
-
-    lcore_main();
-}
-
-
-void DpdkSource::Open(){
-
-}
-
-
-void DpdkSource::Close(){
-	//last_burst = 0;
-	Closed();
-}
-
-
-/* Initializes a given port using global settings and with the RX buffers
- * coming from the mbuf_pool passed as a parameter.
- */
+// Initializes a given port using global settings and with the RX buffers coming from the mbuf_pool passed as a parameter.
 static inline int
 port_init(uint16_t port, struct rte_mempool *mbuf_pool)
 {
@@ -170,3 +136,51 @@ port_init(uint16_t port, struct rte_mempool *mbuf_pool)
         return retval;
     return 0;
 }
+
+void DpdkSource::Open(){
+	char *my_argv[] = {
+     "myprogram", // most programs will ignore this
+     "-l 1",
+     "-n 2",
+     "-w 0000:00:19.0",
+     NULL
+	};
+
+    int ret;
+    unsigned lcore_id;
+
+    /* Initialize the Environment Abstraction Layer (EAL). */
+    ret = rte_eal_init(3, my_argv);
+    if (ret < 0)
+        rte_panic("Cannot init EAL\n");
+    
+    // std::cout << "path : " << path;     // test is device id
+
+    /* Creates a new mempool in memory to hold the mbufs. */
+    struct rte_mempool *mbuf_pool;
+    mbuf_pool = rte_pktmbuf_pool_create("MBUF_POOL", NUM_MBUFS,
+        MBUF_CACHE_SIZE, 0, RTE_MBUF_DEFAULT_BUF_SIZE, rte_socket_id());
+    if (mbuf_pool == NULL)
+        rte_exit(EXIT_FAILURE, "Cannot create mbuf pool\n");
+
+    /* Initialize the single port available */
+    uint16_t portid = 0;
+    if (port_init(portid, mbuf_pool) != 0)
+        rte_exit(EXIT_FAILURE, "Cannot init port %"PRIu16 "\n", portid);
+
+
+    if (rte_lcore_count() > 1)
+        printf("\nWARNING: Too many lcores enabled. Only 1 used.\n");
+    
+
+    /* call lcore_hello() on the main lcore */
+
+    lcore_main();
+}
+
+void DpdkSource::Close(){
+	//last_burst = 0;
+	Closed();
+}
+
+

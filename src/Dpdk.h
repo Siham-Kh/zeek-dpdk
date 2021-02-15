@@ -36,7 +36,7 @@ namespace pktsrc {
 class DpdkSource : public iosource::PktSrc{
 
 public:
-	DpdkSource(const std::string& path, bool is_live, const std::string& arg_kind);
+	DpdkSource(const std::string& path, bool is_live);
 	~DpdkSource() override;
 
 	static PktSrc* Instantiate(const std::string& path, bool is_live);
@@ -45,15 +45,17 @@ protected:
 	// PktSrc interface.
 	void Open() override;
 	void Close() override;
-	// bool ExtractNextPacket(Packet* pkt) override;
-	// int ExtractNextBurst(Packet bufs[MAX_PKT_BURST]) ;
-	// int GetLastBurstSize() ;
-	// void DoneWithPacket() override;
-	// bool PrecompileFilter(int index, const std::string& filter) override;
-	// bool SetFilter(int index) override;
-	// void Statistics(Stats* stats) override;
 
-
+	
+	// int ExtractNextBurst(Packet bufs[MAX_PKT_BURST]) override;
+	// int GetLastBurstSize() override;
+	
+	bool ExtractNextPacket(Packet* pkt) override;
+	void DoneWithPacket() override;
+	bool PrecompileFilter(int index, const std::string& filter) override;
+	bool SetFilter(int index) override;
+	void Statistics(Stats* stats) override;
+	
 private:
 
 	static inline int port_init(uint16_t port, struct rte_mempool *mbuf_pool);
@@ -61,7 +63,6 @@ private:
 	static int lcore_hello();
 
 	Properties props;
-	std::string kind;
 	int current_filter;
 
 };

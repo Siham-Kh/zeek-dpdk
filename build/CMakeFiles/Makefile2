@@ -63,9 +63,9 @@ CMAKE_BINARY_DIR = /home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpd
 # Target rules for target CMakeFiles/Zeek-Dpdk.linux-x86_64.dir
 
 # All Build rule for target.
+CMakeFiles/Zeek-Dpdk.linux-x86_64.dir/all: CMakeFiles/copy-scripts-Zeek_Dpdk.dir/all
 CMakeFiles/Zeek-Dpdk.linux-x86_64.dir/all: CMakeFiles/bro-plugin-Zeek_Dpdk.dir/all
 CMakeFiles/Zeek-Dpdk.linux-x86_64.dir/all: CMakeFiles/generate_outputs.dir/all
-CMakeFiles/Zeek-Dpdk.linux-x86_64.dir/all: CMakeFiles/copy-scripts-Zeek_Dpdk.dir/all
 	$(MAKE) -f CMakeFiles/Zeek-Dpdk.linux-x86_64.dir/build.make CMakeFiles/Zeek-Dpdk.linux-x86_64.dir/depend
 	$(MAKE) -f CMakeFiles/Zeek-Dpdk.linux-x86_64.dir/build.make CMakeFiles/Zeek-Dpdk.linux-x86_64.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/snk14/zeek-3.2.3/auxil/zeek-aux/plugin-support/zeek-dpdk/build/CMakeFiles --progress-num=1,2,3 "Built target Zeek-Dpdk.linux-x86_64"
