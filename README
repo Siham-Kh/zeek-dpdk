@@ -41,7 +41,7 @@ Assign some huge pages
 
 
 The zeek-dpdk plugin can be used to monitor the device by using the following cmmand:
-    - zeek -i dpdk::0000.19.00.0
+    - zeek -i dpdk::X   where X is either the PCI (e.g. 0000.19.00.0) or pcap  or tap interfaces
 
 
 
