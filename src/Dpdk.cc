@@ -14,12 +14,12 @@ DpdkSource::~DpdkSource(){
 
 DpdkSource::DpdkSource(const std::string& path, bool is_live){
 
-	if ( ! is_live )
-		Error("Dpdk source does not support offline input");
+    if ( ! is_live )
+    	Error("Dpdk source does not support offline input");
 
-	current_filter = -1;
-	props.path = path;
-	props.is_live = is_live;
+    current_filter = -1;
+    props.path = path;
+    props.is_live = is_live;
     goOverBurst = 0;
 
 }
@@ -54,6 +54,7 @@ bool DpdkSource::SetFilter(int index){
 void DpdkSource::Statistics(Stats* s){
 }
 
+/*
 static int
 lcore_hello(__rte_unused void *arg){
     unsigned lcore_id;
@@ -61,12 +62,12 @@ lcore_hello(__rte_unused void *arg){
     printf("hello from core %u\n", lcore_id);
     return 0;
 }
-
 static int lcore_main(){
-    /* call lcore_hello() on the main lcore */
+    // call lcore_hello() on the main lcore
     lcore_hello(NULL);
     return 0;
 }
+*/
 
 // Initializes a given port using global settings and with the RX buffers coming from the mbuf_pool passed as a parameter.
 static inline int
@@ -177,7 +178,7 @@ void DpdkSource::Open(){
 
     /* call lcore_hello() on the main lcore */
 
-    lcore_main();
+    // lcore_main();
 }
 
 void DpdkSource::Close(){
@@ -211,7 +212,3 @@ void  DpdkSource::BuffertToPacket(struct rte_mbuf* buf, Packet* pkt){
 
 	pkt->Init(1, &ts, rte_pktmbuf_data_len(buf), rte_pktmbuf_pkt_len(buf), data, false, tag); //  copy = true: the constructor will make an internal copy of data, so that the caller can release its version.
 }
-
-/*
-
-*/
