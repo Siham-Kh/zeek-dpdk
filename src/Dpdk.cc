@@ -189,12 +189,12 @@ void DpdkSource::Close(){
 
 int  DpdkSource::ExtractNextBurst(Packet pbufs[MAX_PKT_BURST]){
 
-    /* Get burst of RX packets, from first port of pair. */
+    /* Get burst of RX packets, from first port of pair. */    /// t1
     const uint16_t n_pkts = rte_eth_rx_burst(0, 0, bufs, MAX_PKT_BURST);  // hard coded the port
-    goOverBurst = n_pkts;
+    goOverBurst = n_pkts;					// d1 = now - t1 , s peed = n_pkts*64B/d >> plot this over time
 
 	for(int i=0;i<n_pkts;i++){
-		BuffertToPacket(bufs[i], &pbufs[i]);
+		BuffertToPacket(bufs[i], &pbufs[i]);      // compare d2 to d1,  at what point the plugin crashes? 
     }
     
 	return n_pkts;
