@@ -56,7 +56,7 @@ protected:
 	
 private:
 
-	static inline int port_init(uint16_t port, struct rte_mempool *mbuf_pool);
+	// static inline int port_init(uint16_t port, struct rte_mempool *mbuf_pool);
 	static int lcore_hello(__rte_unused void *arg);
 	static int lcore_hello();
 	void BuffertToPacket(struct rte_mbuf* buf, Packet* pkt);

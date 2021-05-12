@@ -11,7 +11,7 @@ if ( dpdk_FOUND )
         set(DPDK_LIB dpdk rt m numa dl)
         set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${DPDK_C_FLAGS})
         include_directories(AFTER ${dpdk_INCLUDE_DIRS})
-        link_directories(AFTER ${dpdk_LIBRARIES})
+        
         set(PCAP_LINK_LIBRARIES ${PCAP_LINK_LIBRARIES} ${dpdk_LIBRARIES})
         set(PROJECT_SOURCE_LIST_C ${PROJECT_SOURCE_LIST_C} pcap-dpdk.c)
         zeek_plugin_begin(Zeek Dpdk)

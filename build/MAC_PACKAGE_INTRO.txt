@@ -6,7 +6,7 @@ This plugin provides native DPDK support for Zeek as a packet source.
 
 
 
-Installation
+1. Installation
 ------------
 
 Follow DPDK (20.11)'s instructions to configure, build and install DPDK:
@@ -17,12 +17,20 @@ Install zeek by following the instructions on this link:
     https://docs.zeek.org/en/current/install/install.html
 
 
+Build the plugin:
+    ./configure --zeek-dist=/path/to/zeek/director
+    make
+    sudo make install
+    Export the ZEEK_PLUGIN_PATH to take in consideration the plugin location: 
+        export ZEEK_PLUGIN_PATH=~/path/plugin/zeek-dpdk/build
 
-Usage
+
+
+2. Usage
 ------------
 
 For pysical devices: 
-    - Unbind the device to be by DPDK from the kernel
+    - Unbind the device to be used by DPDK from the kernel
 
 For Virtual devices:
     - No need, via --vdev in the configure file or by hardcoding it in the plugin
@@ -33,11 +41,12 @@ Assign some huge pages
 
 
 The zeek-dpdk plugin can be used to monitor the device by using the following cmmand:
-    - zeek -i dpdk::0000.19.00.0
+    - zeek -i dpdk::X   where X is either the PCI (e.g. 0000.19.00.0) or pcap  or tap interfaces
 
 
 
-Limitations:
+
+3. Limitations:
 ------------
 
 - So far all dpdk options are hardcoded --> either read from a file or something else
