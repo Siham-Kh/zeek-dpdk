@@ -1,6 +1,24 @@
 #ifndef IOSOURCE_PKTSRC_DPDK_SOURCE_H
 #define IOSOURCE_PKTSRC_DPDK_SOURCE_H
 
+
+extern "C" {
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+
+#include <errno.h>          // errorno
+#include <unistd.h>         // close()
+#include <linux/version.h>  // kernel version
+
+#include <net/ethernet.h>      // ETH_P_ALL
+#include <linux/if.h>          // ifreq
+#include <linux/if_packet.h>   // AF_PACKET, etc.
+#include <linux/sockios.h>     // SIOCSHWTSTAMP
+#include <linux/net_tstamp.h>  // hwtstamp_config
+#include <pcap.h>
+}
+
 #include <iosource/PktSrc.h>
 #include <rte_ethdev.h>
 #include <stdint.h>
@@ -15,10 +33,10 @@
 #define TX_RING_SIZE 1024
 #define NUM_MBUFS 8191
 #define MBUF_CACHE_SIZE 250
-#define BURST_SIZE 32
+#define BURST_SIZE 6
 #define RX_QUEUES 1
-#define TX_QUEUES 0
-#define RX_DESC 0
+#define TX_QUEUES 1
+#define RX_DESC 1024
 #define TX_DESC 0
 #define DROP_EN 0 // drop packets if no descriptor available
 #define RSS_EN 0 // enable RSS
@@ -42,21 +60,20 @@ public:
 
 protected:
 	// PktSrc interface.
-	void Open() override;
-	void Close() override;
+	void Open();
+	void Close();
 	bool ExtractNextPacket(Packet* pkt);
-	int ExtractNextBurst(Packet bufs[MAX_PKT_BURST]);
+	// int ExtractNextBurst(Packet bufs[MAX_PKT_BURST]);
 	// int GetLastBurstSize() override;
 
 	
-	void DoneWithPacket() override;
+	void DoneWithPacket();
 	bool PrecompileFilter(int index, const std::string& filter) override;
 	bool SetFilter(int index) override;
 	void Statistics(Stats* stats) override;
 	
 private:
 
-	// static inline int port_init(uint16_t port, struct rte_mempool *mbuf_pool);
 	static int lcore_hello(__rte_unused void *arg);
 	static int lcore_hello();
 	void BuffertToPacket(struct rte_mbuf* buf, Packet* pkt);
@@ -65,8 +82,12 @@ private:
 	int current_filter;
 
 	struct rte_mbuf *bufs[MAX_PKT_BURST];
+	rte_eth_stats dpdk_stats;
+	Stats stats;
 
 	int goOverBurst;
+
+	int port;
 
 };
 

@@ -3,5 +3,6 @@ Zeek_Dpdk/lib/Zeek-Dpdk.linux-x86_64.so
 Zeek_Dpdk/scripts/types.zeek
 Zeek_Dpdk/scripts/__load__.zeek
 Zeek_Dpdk/scripts/Zeek/Dpdk/__load__.zeek
+Zeek_Dpdk/scripts/init-zeek
 Zeek_Dpdk/scripts/__preload__.zeek
 Zeek_Dpdk/VERSION
