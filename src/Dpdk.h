@@ -33,8 +33,8 @@ extern "C" {
 #define TX_RING_SIZE 1024
 #define NUM_MBUFS 8191
 #define MBUF_CACHE_SIZE 250
-#define BURST_SIZE 6
-#define RX_QUEUES 1
+#define BURST_SIZE 64
+#define RX_QUEUES 2  // number of queues
 #define TX_QUEUES 1
 #define RX_DESC 1024
 #define TX_DESC 0
@@ -87,7 +87,7 @@ private:
 
 	int goOverBurst;
 
-	int port;
+	int NumQ;
 
 };
 

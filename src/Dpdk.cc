@@ -21,6 +21,7 @@ DpdkSource::DpdkSource(const std::string& path, bool is_live){
     current_filter = -1;
     props.path = path;
     props.is_live = is_live;
+    NumQ = std::stoi(path);
 }
 
 
@@ -34,38 +35,30 @@ bool DpdkSource::ExtractNextPacket(Packet* pkt){
     // /* Get burst of RX packets, from first port of pair. */    /// t1
     // printf("ExtractNextPacket(   )\n");
     while (true){
-        const uint16_t n_pkts = rte_eth_rx_burst(0, 0, bufs, 10);  // hard coded the port
-        if (n_pkts == 0){ 			
-            return false;
-        }else{
-            printf("new packet %d\n", n_pkts);
-            stats.received+=n_pkts;
-            for (int i =0; i < n_pkts; i++){
-                pkt_timeval ts = {0, 0};
-	            u_char* data = rte_pktmbuf_mtod(bufs[i], u_char*);
+        for (int j = 0; j < NumQ; j++){
+            const uint16_t n_pkts = rte_eth_rx_burst(0, j, bufs, BURST_SIZE);  // hard coded the port
+            if (n_pkts == 0){ 			
+                return false;
+            }else{
+                printf("New burst %d\n", n_pkts);
+                stats.received+=n_pkts;
+                for (int i = 0; i < n_pkts; i++){
+                    pkt_timeval ts = {0, 0};
+                    u_char* data = rte_pktmbuf_mtod(bufs[i], u_char*);
 
-               	// struct rte_ether_hdr *eth_hdr = {0};
-                // eth_hdr = rte_pktmbuf_mtod(bufs[i], struct ether_hdr *);
-	            // struct rte_ether_addr src = eth_hdr->s_addr;
-	            // struct rte_ether_addr dst = eth_hdr->d_addr;
-
-	            // printf("**** from MAC : %02X:%02X:%02X:%02X:%02X:%02X \n", src.addr_bytes[0],src.addr_bytes[1],src.addr_bytes[2],src.addr_bytes[3],src.addr_bytes[4],src.addr_bytes[5]);
-	            // printf("**** to MAC: %02X:%02X:%02X:%02X:%02X:%02X \n", dst.addr_bytes[0],dst.addr_bytes[1],dst.addr_bytes[2],dst.addr_bytes[3],dst.addr_bytes[4],dst.addr_bytes[5]);
-
-
-	            std::string tag = "";
-	            pkt->Init(props.link_type, &ts, rte_pktmbuf_data_len(bufs[i]), rte_pktmbuf_pkt_len(bufs[i]), data, false, tag); //  copy = true: the constructor will make an internal copy of data, so that the caller can release its version.
-                rte_pktmbuf_free(bufs[i]);
-                printf("freed\n");
+                    std::string tag = "";
+                    pkt->Init(props.link_type, &ts, rte_pktmbuf_data_len(bufs[i]), rte_pktmbuf_pkt_len(bufs[i]), data, false, tag); //  copy = true: the constructor will make an internal copy of data, so that the caller can release its version.
+                    rte_pktmbuf_free(bufs[i]);
+                }
+                return true;
             }
-            return true;
         }
     }
 	return false;
 }
 
 void DpdkSource::DoneWithPacket(){
-    printf("DoneWithPacket()\n");   
+    printf("Done Burst\n");   
 }
 
 bool DpdkSource::PrecompileFilter(int index, const std::string& filter){
@@ -73,51 +66,24 @@ bool DpdkSource::PrecompileFilter(int index, const std::string& filter){
 }
 
 bool DpdkSource::SetFilter(int index){
-	/* Uh, DPDK has this option? */
     current_filter = index;
 	return true;
 }
 
 void DpdkSource::Statistics(Stats* s){
 
-    if(!props.is_live)
-		s->received = s->dropped = s->link = s->bytes_received = 0;
-
+    if(!props.is_live){
+	
+    	s->received = s->dropped = s->link = s->bytes_received = 0;
     
-    else{
-		// TODO check stats/rte_eth_stats. Not available for every NIC
-		rte_eth_stats_get(port, &dpdk_stats);
-		if(dpdk_stats.ipackets == 0 && stats.received > 0){
-			fprintf(stderr, "[+] Cannot get stats directly from DPDK\n");
-
-			s->received = stats.received;
-			s->bytes_received = stats.bytes_received;
-			s->dropped = stats.dropped;
-		}
-
-		else{
-			s->received = dpdk_stats.ipackets;
-			s->bytes_received = dpdk_stats.ibytes;
-			s->dropped = dpdk_stats.imissed;
-		}
+    }else{
+	    rte_eth_stats_get(0, &dpdk_stats);
+        s->received = dpdk_stats.ipackets;   // or stats.received;
+        s->bytes_received = dpdk_stats.ibytes;
+        s->dropped = dpdk_stats.imissed;
 	}
 
 }
-
-
-static int
-lcore_hello(__rte_unused void *arg){
-    unsigned lcore_id;
-    lcore_id = rte_lcore_id();
-    printf("hello from core %u\n", lcore_id);
-    return 0;
-}
-static int lcore_main(){
-    // call lcore_hello() on the main lcore
-    lcore_hello(NULL);
-    return 0;
-}
-
 
 void DpdkSource::Open(){
     char *my_argv[] = {
@@ -163,8 +129,9 @@ void DpdkSource::Open(){
     port_conf.rxmode.max_rx_pkt_len = RTE_ETHER_MAX_LEN;
 
     /* Configure the Ethernet device. */
-    const uint16_t rx_rings = 1, tx_rings = 1;
-    retval = rte_eth_dev_configure(0, rx_rings, tx_rings, &port_conf);
+    const uint16_t tx_rings = 0;
+    
+    retval = rte_eth_dev_configure(0, NumQ, tx_rings, &port_conf);
     if (retval != 0)
         printf("\nError: rte_eth_dev_configure failed code = %d\n", retval);
     
@@ -178,23 +145,21 @@ void DpdkSource::Open(){
     rxconf = dev_info.default_rxconf;
 
 
-    for (int q = 0; q < rx_rings; q++) {
-        retval = rte_eth_rx_queue_setup(0, q, nb_rxd, rte_eth_dev_socket_id(0), &rxconf, mbuf_pool);
+    for (int q = 0; q < NumQ; q++) {         // single rx queue per worker for now
+        retval = rte_eth_rx_queue_setup(0, q, nb_rxd, rte_eth_dev_socket_id(0), &rxconf, mbuf_pool);  // option to pin cpu to queue? now same core
         if (retval < 0)
             printf("\nError: rte_eth_rx_queue_setup failed code = %d\n", retval);
     }
  
 
-    struct rte_eth_txconf txconf = {0};
-    txconf = dev_info.default_txconf;
-    txconf.offloads = port_conf.txmode.offloads;
-    for (int q = 0; q < tx_rings; q++) {
-        retval = rte_eth_tx_queue_setup(0, q, nb_txd, rte_eth_dev_socket_id(0), &txconf);
-        if (retval < 0)
-            printf("\nError: rte_eth_tx_queue_setup failed code = %d\n", retval);
-    }
-
-    lcore_main();
+    // struct rte_eth_txconf txconf = {0};
+    // txconf = dev_info.default_txconf;
+    // txconf.offloads = port_conf.txmode.offloads;
+    // for (int q = 0; q < tx_rings; q++) {
+    //     retval = rte_eth_tx_queue_setup(0, q, nb_txd, rte_eth_dev_socket_id(0), &txconf);
+    //     if (retval < 0)
+    //         printf("\nError: rte_eth_tx_queue_setup failed code = %d\n", retval);
+    // }
 
     /* Start the Ethernet port. */
     retval = rte_eth_dev_start(0);
@@ -218,9 +183,6 @@ void DpdkSource::Open(){
     if (retval != 0)
         printf("Error: rte_eth_promiscuous_enable failed code = %d\n", retval);
 
-
-    /* call lcore_hello() on the main lcore */
-    lcore_main();
 
     props.is_live = true;
 	props.link_type = DLT_EN10MB;

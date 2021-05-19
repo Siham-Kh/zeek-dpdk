@@ -1,5 +1,56 @@
+  GNU nano 2.9.3                                                                                      /home/snk14/inspiration/zeek-dpdk/README                                                                                                
+
 
 Zeek::Dpdk
 =================================
 
-<Insert plugin documentation here.>
+This plugin provides native DPDK support for Zeek as a packet source.
+
+
+
+1. Installation
+------------
+
+Follow DPDK (20.11)'s instructions to configure, build and install DPDK:
+    https://doc.dpdk.org/guides/linux_gsg/build_dpdk.html
+
+
+Install zeek by following the instructions on this link:
+    https://docs.zeek.org/en/current/install/install.html
+
+
+Build the plugin:
+    ./configure --zeek-dist=/path/to/zeek/director
+    make
+    sudo make install
+    Export the ZEEK_PLUGIN_PATH to take in consideration the plugin location:
+        export ZEEK_PLUGIN_PATH=~/path/plugin/zeek-dpdk/build
+
+
+
+2. Usage
+------------
+
+For pysical devices:
+    - Unbind the device to be used by DPDK from the kernel
+
+For Virtual devices:
+    - No need, via --vdev in the configure file or by hardcoding it in the plugin
+
+
+Assign some huge pages
+    - e.g echo 1024 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+
+
+The zeek-dpdk plugin can be used to monitor the device by using the following cmmand:
+    - zeek -i dpdk::X   where X is either the PCI (e.g. 0000.19.00.0) or pcap  or tap interfaces
+
+
+
+
+3. Limitations:
+------------
+
+- So far all dpdk options are hardcoded --> either read from a file or something else
+- Consider optimization later on (concurrent cores, ...)
+

@@ -10,5 +10,5 @@
 
 
 
-@load init.zeek
+@load ./init.zeek
 
