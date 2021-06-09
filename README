@@ -51,6 +51,5 @@ The zeek-dpdk plugin can be used to monitor the device by using the following cm
 3. Limitations:
 ------------
 
-- So far all dpdk options are hardcoded --> either read from a file or something else
-- Consider optimization later on (concurrent cores, ...)
+- Consider IO optimization later on (concurrent cores, ...)
 
