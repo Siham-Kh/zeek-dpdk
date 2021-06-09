@@ -52,4 +52,5 @@ The zeek-dpdk plugin can be used to monitor the device by using the following cm
 ------------
 
 - Consider IO optimization later on (concurrent cores, ...)
+- Replace any hard coded values
 
